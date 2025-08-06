@@ -1,0 +1,1 @@
+Boot.dev project to create an agentic AI using geminis free tier LLM.
