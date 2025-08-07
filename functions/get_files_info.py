@@ -1,4 +1,5 @@
 import os
+from config import *
 
 
 def get_files_info(working_directory, directory="."):
@@ -37,3 +38,31 @@ def get_files_info(working_directory, directory="."):
         files_info.append(f"- {item}: file_size={os.path.getsize(item_path)}, is_dir={os.path.isdir(item_path)}")
     
     return "\n".join(files_info)
+
+def get_file_content(working_directory, file_path):
+    """
+    Get the content of a file.
+
+    Args:
+        working_directory (str): The base directory to start from.
+        file_path (str): The path to the file, relative within the working_directory.
+
+    Returns:
+        str: The content of the file or an error message if the file does not exist.
+    """
+    full_path = os.path.join(working_directory, file_path)
+    abs_working_directory = os.path.abspath(working_directory)
+    abs_path = os.path.abspath(full_path)
+
+    if not abs_path.startswith(abs_working_directory):
+        return f"Error: Cannot read \"{file_path}\" as it is outside the permitted working directory"
+    
+    if not os.path.isfile(full_path):
+        return f"Error: File not found or is not a regular file: \"{file_path}\""
+    
+    with open(full_path, 'r') as file:
+        if os.path.getsize(full_path) > MAX_CHARS:
+            file_content_string = file.read(MAX_CHARS)
+            return file_content_string + f"[...File \"{file_path}\" truncated at {MAX_CHARS} characters.]"
+        else:
+            return file.read()
