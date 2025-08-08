@@ -1,4 +1,5 @@
 from functions.get_files_info import *
+from functions.write_file import write_file
 
 
 if __name__ == "__main__":
@@ -12,7 +13,7 @@ if __name__ == "__main__":
     print(get_files_info("calculator", "/bin"))
     print("Test case 4")
     print(get_files_info("calculator", "../"))
-    """
+    
     print("Test case 1")
     #print(get_file_content("calculator", "lorem.txt"))
     print(get_file_content("calculator", "main.py"))
@@ -23,5 +24,11 @@ if __name__ == "__main__":
     print("Test case 4")
     print(get_file_content("calculator", "pkg/does_not_exist.py"))
 
+    """
 
-
+    print("Test case 1")
+    print(write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum"))
+    print("Test case 2")
+    print(write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"))
+    print("Test case 3")
+    print(write_file("calculator", "/tmp/temp.txt", "this should not be allowed"))
