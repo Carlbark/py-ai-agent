@@ -8,6 +8,7 @@ from functions.get_files_info import schema_get_files_info
 from functions.get_files_info import schema_get_file_content
 from functions.write_file import schema_write_file
 from functions.run_python import schema_run_python_file
+from function.call_function import call_function
 
 # Load environment variables from .env file
 load_dotenv()
@@ -54,6 +55,21 @@ def main():
             if function_call.name == "get_files_info" and 'directory' not in args:
                 args['directory'] = '.'
             print(f"Calling function: {function_call.name}({args})")
+            result = call_function(function_call, verbose=verbose)
+            print(f"Function result: {result.parts[0].text if result.parts else 'No result'}")
+            response = types.Content(
+                role="tool",
+                parts=[types.Part.from_function_response(
+                    name=function_call.name,
+                    response={"result": result.parts[0].text if result.parts else "No result"}
+                )]
+            )
+        print("Function calls completed.")
+    elif response.text is None:
+        print("No function calls made, response text is empty.")
+    elif response.text == "":
+        print("No function calls made, response text is empty.")
+
            
     else:
         print(response.text)
