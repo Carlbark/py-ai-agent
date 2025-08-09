@@ -54,6 +54,21 @@ def get_files_info(working_directory, directory="."):
     
     return "\n".join(files_info)
 
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Retrieves the content of a file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the file, relative to the working directory.",
+            ),
+        },
+    ),
+)
+
 def get_file_content(working_directory, file_path):
     """
     Get the content of a file.
