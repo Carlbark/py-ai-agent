@@ -8,7 +8,7 @@ from functions.get_files_info import schema_get_files_info
 from functions.get_files_info import schema_get_file_content
 from functions.write_file import schema_write_file
 from functions.run_python import schema_run_python_file
-from function.call_function import call_function
+from functions.call_function import call_function
 
 # Load environment variables from .env file
 load_dotenv()
@@ -48,31 +48,23 @@ def main():
         )
     )
     print("Response from Gemini API:")
+    # if verbose:
+      # print(response)
     if response.function_calls:
         for function_call in response.function_calls:
             args = function_call.args
 
             if function_call.name == "get_files_info" and 'directory' not in args:
                 args['directory'] = '.'
-            print(f"Calling function: {function_call.name}({args})")
-            result = call_function(function_call, verbose=verbose)
-            print(f"Function result: {result.parts[0].text if result.parts else 'No result'}")
-            response = types.Content(
-                role="tool",
-                parts=[types.Part.from_function_response(
-                    name=function_call.name,
-                    response={"result": result.parts[0].text if result.parts else "No result"}
-                )]
-            )
-        print("Function calls completed.")
-    elif response.text is None:
-        print("No function calls made, response text is empty.")
-    elif response.text == "":
-        print("No function calls made, response text is empty.")
+            
 
+            result = call_function(function_call, verbose=verbose)
+            function_response = result.parts[0].function_response.response
+            if not function_response:
+                raise Exception(f"Fatal error: Function {function_call.name} returned no response.")
+            elif verbose:
+                print(f"-> {function_response}")
            
-    else:
-        print(response.text)
 
     if verbose:
         print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")

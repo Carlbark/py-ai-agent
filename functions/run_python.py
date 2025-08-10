@@ -8,9 +8,10 @@ from google.genai import types
 
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
-    description="Runs a Python file with the specified arguments, constrained to the working directory.",
+    description="Runs a Python file with optional arguments, constrained to the working directory. If no arguments are provided, run the file without any arguments.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
+        required=["file_path"],
         properties={
             "file_path": types.Schema(
                 type=types.Type.STRING,
